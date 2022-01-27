@@ -1,0 +1,66 @@
+INIDATA Banking_infile;
+INFILE "Banking.txt" DELIMITER='09'x  MISSOVER firstobs=2;
+INPUT AGE education INCOME BALANCE;
+LABEL AGE="Median age of the population"  EDUCATION="Median years of education"
+INCOME="Median income in $" 
+BALANCE=" Average Bank Balance in $" ;
+RUN;
+TITLE"BANKING";
+PROC PRINT data =banking_infile;
+RUN;
+PROC REG;
+MODEL BALANCE=AGE EDUCATION INCOME ;
+RUN;
+PROC REG;
+MODEL BALANCE= AGE INCOME;
+PLOT STUDENT.*(AGE INCOME);
+PLOT STUDENT.*PREDICTED.;
+PLOT NPP.*STUDENT.;
+RUN;
+
+
+ 
+
+
+
+*HOUSE SALES DATASETS;
+DATA INFILE_housesales;
+infile "housesales.txt" DELIMITER='09'x  MISSOVER firstobs=2;
+input  region $  home$ price cost;
+LABEL PRICE="SELLING PRICE" COST="LOT COST" HOME="TYPE OF HOME"
+REGION="REGION OF THE COUNTRY";
+* CREATE DUMMY VARIBLES FOR REGION AND HOME;
+numregion=1;
+IF REGION='M' THEN NUMREGION=0;
+NUMTYPE=1;
+IF HOME='SF' THEN NUMTYPE=0;
+RUN;
+PROC PRINT DATA= INFILE_HOUSESALES;
+RUN;
+* CREATE A SCATTTREPLOTS  BETWWEN PRICE AND (COST ,NUMTYPE, NUMREGION);
+
+PROC GPLOT;
+PLOT PRICE*( COST NUMREGION NUMTYPE);
+RUN;
+*CORRELATION.........;
+PROC CORR;
+VAR PRICE COST NUMREGION NUMTYPE;
+RUN;
+*REGRESSION ANALYSIS FITTING A LINER MODEL 1...;
+PROC REG;
+MODEL PRICE= COST NUMREGION NUMTYPE;
+RUN;
+*SECOND MODEL;
+PROC REG;
+MODEL PRICE=COST NUMTYPE;
+* studentized residuals;
+plot student.*predicted.;
+
+* studentized residuals with every x-var;
+plot student.*(COST  NUMTYPE); 
+
+* normal probablity plot of studentized residuals;
+plot npp.*student.;  
+RUN;
+
+

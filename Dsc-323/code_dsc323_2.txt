@@ -1,0 +1,45 @@
+*AVERAGE  BANK BALANCE.............;
+DATA Banking_infile;
+INFILE "Banking.txt" DELIMITER='09'x  MISSOVER firstobs=2;
+INPUT AGE INCOME BALANCE EDUCATION;
+LABEL AGE="Median age of the population" INCOME="Median income in $" 
+BALANCE=" Average Bank Balance in $" EDUCATION="Median years of education";
+RUN;
+TITLE"BANKING";
+PROC PRINT data =banking_infile;
+RUN;
+*histogram..........;
+title"HISTOGRAM OF AVERGAE BANK BALANCE";
+PROC univariate  normal;
+VAR BALANCE;
+HISTOGRAM/NORMAL(MU=EST SIGMA=EST);
+RUN;
+*DESCRIPTIVE......;
+TITLE" DESCRIPTIVE OF AVERAGE BANK BALANCE";
+PROC MEANS MIN MAX P25 P50 P75;
+VAR BALANCE;
+RUN;
+* SCATTERPLOTS..............;
+PROC SGSCATTER;
+TITLE" scatterplots matrix between bank balance and the other variables.";
+MATRIX BALANCE AMAGE INCOME EDUCATION;
+RUN;
+*CORRELATION.........;
+PROC CORR;
+TITLE"correlation between bank balance and other vareiables.";
+VAR BALANCE AGE INCOME EDUCATION;
+RUN;
+*REGRESSION ANALYSIS FITTING A LINER MODEL...;
+TITLE"regression analysis between bank and other vareiables.";
+PROC REG;
+MODEL BALANCE= AGE INCOME EDUCATION;
+RUN;
+
+ 
+
+
+
+
+
+
+

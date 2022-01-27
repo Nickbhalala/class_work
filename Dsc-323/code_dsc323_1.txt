@@ -1,0 +1,42 @@
+*the U.S.  voted in 1992 elections;
+*part 1;
+proc import datafile="voting_1992.txt" out=voting_1992 replace;
+delimiter='09'x;
+getnames=yes;
+datarow=2;
+run;
+
+
+title"voting_1992";
+proc print;
+run;
+
+*part 2;
+title"descriptives";
+proc means  min max p25 p50 p75;
+var Pct_Voted  MedianAge;
+run;
+
+
+* part 3;
+title"HISTOGRAM ";
+proc HI
+var Pct_Voted ;
+histogram /normal(mu=est sigma=est);
+RUN;
+
+*PART 4;
+proc sort;
+by gender;
+run;
+* boxplot;
+title"BOXPLOT- Pct_Voted  BY gender";
+PROC BOXPLOT;
+PLOT Pct_Voted*gender;
+RUN;
+
+*part 5;
+title "frequency of datasets";
+proc freq;
+table gender;
+run;

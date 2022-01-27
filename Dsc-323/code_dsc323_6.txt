@@ -1,0 +1,57 @@
+*churn dataset;
+proc import datafile="churn_train.csv"out=churn_new replace;
+delimiter=',';
+getnames=yes;
+run;
+
+proc print;
+run;
+data churnNew;
+set churn_new;
+num_GENDER=1;
+if GENDER='M' then num_GENDER=0;
+drop GENDER;
+run;
+proc print;
+run;
+proc sort;
+By churn;
+run;
+proc boxplot;
+plot age*churn;
+run;
+proc sort;
+By churn;
+run;
+proc boxplot;
+plot PCT_CHNG_BILL_AMT*churn;
+run;
+
+proc logistic;
+model churn (event='1')=EDUCATION LAST_PRICE_PLAN_CHNG_DAY_CNT TOT_ACTV_SRV_CNT AGE 
+			PCT_CHNG_IB_SMS_CNT PCT_CHNG_BILL_AMT  COMPLAINT  num_GENDER /selection=stepwise rsquare;
+run;
+proc logistic;
+model churn (event='1')=TOT_ACTV_SRV_CNT  AGE  PCT_CHNG_IB_SMS_CNT/ rsquare;
+run;
+
+data new_churn;
+input  LAST_PRICE_PLAN_CHNG_DAY_CNT   TOT_ACTV_SRV_CNT AGE PCT_CHNG_IB_SMS_CNT  PCT_CHNG_BILL_AMT  COMPLAINT  num_GENDER;
+datalines;
+0 4 43 1.04  1.19 1 0
+;
+
+run;
+proc print;
+run;
+data pred;
+set new_churn churnNew;
+run;
+proc print;
+run;
+proc logistic;
+model churn (event='1')=TOT_ACTV_SRV_CNT  AGE  PCT_CHNG_IB_SMS_CNT;
+output out=pred p=phat  lower=lcl  upper=ucl;
+run;
+proc print;
+run;

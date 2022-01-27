@@ -1,0 +1,141 @@
+Data banking_newpred;
+input  AGE EDUCATION INCOME  HOMEVAL WEALTH;
+dataLINES;
+34 13 89000 160000 140000 0 
+;
+PROC PRINT DATA=BANKING_NEWPRED;
+RUN;
+DATA PRED;
+SET BANKING_NEWPRED NEW_BANKING;
+RUN;
+PROC PRINT ;
+RUN;
+PROC REG;
+MODEL  BALANCE = AGE EDUCATION  HOMEVAL WEALTH/ P CLM CLI;
+RUN;
+
+
+
+
+
+
+
+
+
+********************************************************
+********************************************************
+college datasets...;
+proc import datafile="college.csv"out=college replace;
+delimiter=',';
+getnames=yes;
+run;
+proc print;
+run;
+*drop school and created dummy for private;
+data college;
+set college;
+drop school;
+numprivate=1;
+if private='Yes' then numprivate=0;
+drop private;
+run;
+proc print;
+run;
+proc univariate normal;
+var Grad_Rate;
+histogram/normal(MU=EST SIGMA=EST);
+run;
+PROC SGSCATTER;
+matrix GRAD_RATE Accept_pct  Elite10  F_Undergrad 
+		P_Undergrad  Outstate  Room_Board  Books  Personal 
+		PhD  Terminal  S_F_Ratio  perc_alumni  Expend  numprivate;
+RUN;
+PROC SORT;
+BY NUMPRIVATE;
+RUN;
+PROC BOXPLOT;
+PLOT GRAD_RATE* NUMPRIVATE;
+RUN;
+PROC SORT;
+BY ELITE10;
+RUN;
+PROC BOXPLOT;
+PLOT GRAD_RATE* ELITE10;
+RUN;
+PROC REG;
+MODEL GRAD_RATE = Accept_pct  Elite10  F_Undergrad 
+				P_Undergrad  Outstate  Room_Board  Books  Personal 
+				PhD  Terminal  S_F_Ratio  perc_alumni  Expend  numprivate;
+RUN;
+PROC REG;
+MODEL GRAD_RATE = Accept_pct  Elite10  F_Undergrad 
+				P_Undergrad  Outstate  Room_Board  Books  Personal 
+				PhD  Terminal    perc_alumni  Expend  numprivate;
+RUN;
+PROC REG;
+MODEL GRAD_RATE = Accept_pct  Elite10  F_Undergrad 
+				P_Undergrad  Outstate  Room_Board    Personal 
+				PhD  Terminal    perc_alumni  Expend  numprivate;
+RUN;
+PROC REG;
+MODEL GRAD_RATE = Accept_pct  Elite10  F_Undergrad 
+				P_Undergrad  Outstate  Room_Board  Personal 
+				PhD   perc_alumni  Expend  numprivate;
+RUN;
+PROC REG;
+MODEL GRAD_RATE = Accept_pct  Elite10  F_Undergrad 
+				P_Undergrad  Outstate  Room_Board  Personal 
+				PhD   perc_alumni  Expend  numprivate /VIF;
+RUN;
+PROC REG;
+MODEL GRAD_RATE = Accept_pct  Elite10  F_Undergrad 
+				P_Undergrad  Outstate  Room_Board  Personal 
+				PhD   perc_alumni  Expend  numprivate/SELECTION=BACKWARD ;
+RUN;
+PROC REG;
+MODEL GRAD_RATE = Accept_pct  Elite10  F_Undergrad 
+				P_Undergrad  Outstate  Room_Board  Personal 
+				PhD   perc_alumni  Expend  numprivate/SELECTION=ADJRSQ;
+
+RUN;
+PROC REG;
+MODEL GRAD_RATE=Accept_pct  Elite10  F_Undergrad  P_Undergrad  Outstate  Room_Board 
+				Personal PhD  perc_alumni  Expend numprivate;
+PLOT STUDENT.*(Accept_pct  Elite10  F_Undergrad  P_Undergrad  
+			   Outstate  Room_Board Personal PhD  perc_alumni
+			   Expend numprivate);
+PLOT STUDENT.*PREDICTED.;
+PLOT NPP.*STUDENT.;
+RUN;
+PROC REG;
+MODEL GRAD_RATE=Accept_pct  Elite10  F_Undergrad  P_Undergrad  Outstate  Room_Board 
+				Personal PhD  perc_alumni  Expend numprivate/INFLUENCE R;
+RUN;
+DATA COLLEGE_NEW;
+SET COLLEGE;
+IF _N_ IN(57,75,78,88,238,293,563,619) THEN DELETE;
+RUN;
+PROC REG DATA=COLLEGE_NEW;
+MODEL GRAD_RATE=Accept_pct  Elite10  F_Undergrad  P_Undergrad  Outstate  Room_Board 
+				Personal PhD  perc_alumni  Expend numprivate/INFLUENCE R;
+RUN;
+DATA COLLEGE_NEW2;
+SET COLLEGE_NEW;
+IF _N_ IN(4,195,363) THEN DELETE;
+RUN;
+PROC REG DATA=COLLEGE_NEW2;
+MODEL GRAD_RATE=Accept_pct  Elite10  F_Undergrad  P_Undergrad  Outstate  Room_Board 
+				Personal PhD  perc_alumni  Expend numprivate/INFLUENCE R;
+RUN;
+DATA COLLEGE_NEW3;
+SET COLLEGE_NEW2;
+IF _N_ IN(274) THEN DELETE;
+RUN;
+PROC REG DATA=COLLEGE_NEW3;
+MODEL GRAD_RATE=Accept_pct  Elite10  F_Undergrad  P_Undergrad  Outstate  Room_Board 
+				Personal PhD  perc_alumni  Expend numprivate/INFLUENCE R;
+RUN;
+PROC REG DATA=COLLEGE_NEW3;
+MODEL GRAD_RATE=Accept_pct  Elite10  F_Undergrad  P_Undergrad  Outstate  Room_Board 
+				Personal PhD  perc_alumni  Expend numprivate/STB;
+RUN;
