@@ -1,0 +1,14 @@
+for( int i =0 , i< array.lenght, i++):
+ int j;
+    if( array[i] > array[i+1]):
+	j= array[i+1];
+	array[i+1] = array[i];
+	array[i]= j
+int done =0
+while done==0
+ int num=  int(Please enter number of numbers to sort (0-50000)):
+     if( num <= low || num>=high)
+	 return 0;
+	else:
+ 	return -1;
+

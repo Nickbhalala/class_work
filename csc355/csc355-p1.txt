@@ -1,0 +1,11 @@
+select  dep count(name) from worker where salary >40,000 gourp by dep
+select av(salary) from worker;
+select  max(salary) from worker 
+ group by dep 
+ order by max(salary)
+select dep sum(salary)from worker 
+group by dep 
+order by  (sum(salary)) desc
+select  count(couresid) from enrollment group by studentid 
+
+
