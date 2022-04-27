@@ -1,0 +1,221 @@
+--Q1
+
+select employee_id, (last_name || ',' || first_name )as fullName, to_char (salary,  '$999,999') salary , department_id
+                                                                                from employees
+                                                                                WHERE manager_id = 101;
+COMMIT;
+output:-
+
+
+EMPLOYEE_ID FULLNAME                                       SALARY    DEPARTMENT_ID
+----------- ---------------------------------------------- --------- -------------
+        108 Greenberg,Nancy                                  $12,000           100
+        200 Whalen,Jennifer                                   $4,400            10
+        203 Mavris,Susan                                      $6,500            40
+        204 Baer,Hermann                                     $10,000            70
+        205 Higgins,Shelley                                  $12,000           110
+
+
+Commit complete.
+
+---Q2
+select employee_id, (last_name || ',' || first_name )as fullName, to_char (salary,  '$999,999') salary , department_id 
+                                                                        from  employees
+                                                                       where manager_id = (select employee_id from employees
+                                                            where upper(last_name) ='KOCHHAR' and upper(first_name) ='NEENA');
+COMMIT;
+output:-
+
+EMPLOYEE_ID FULLNAME                                       SALARY    DEPARTMENT_ID
+----------- ---------------------------------------------- --------- -------------
+        108 Greenberg,Nancy                                  $12,000           100
+        200 Whalen,Jennifer                                   $4,400            10
+        203 Mavris,Susan                                      $6,500            40
+        204 Baer,Hermann                                     $10,000            70
+        205 Higgins,Shelley                                  $12,000           110
+
+
+Commit complete.
+
+--Q3
+select employee_id, (last_name || ',' || first_name )as fullName,  department_id 
+                                                                                from employees  
+                                                                              where (first_name) LIKE( 'C%');
+COMMIT;
+
+output:-
+
+EMPLOYEE_ID FULLNAME                                       DEPARTMENT_ID
+----------- ---------------------------------------------- -------------
+        142 Davies,Curtis                                             50
+        153 Olsen,Christopher                                         80
+        162 Vishney,Clara                                             80
+        179 Johnson,Charles                                           80
+
+
+Commit complete.
+--Q4
+SELECT  departments.department_id, departments.department_name   , count(employees.employee_id)   FROM employees inner join departments on employees.department_id = departments.department_id
+group by departments.department_id ,departments.department_name
+ order by departments.department_id asc;
+ COMMIT;
+
+output:-
+
+
+DEPARTMENT_ID DEPARTMENT_NAME                COUNT(EMPLOYEES.EMPLOYEE_ID)
+------------- ------------------------------ ----------------------------
+           10 Administration                                            1
+           20 Marketing                                                 2
+           30 Purchasing                                                6
+           40 Human Resources                                           1
+           50 Shipping                                                 45
+           60 IT                                                        5
+           70 Public Relations                                          1
+           80 Sales                                                    34
+           90 Executive                                                 3
+          100 Finance                                                   6
+          110 Accounting                                                2
+
+11 rows selected. 
+
+
+Commit complete.
+ --Q5
+ 
+ select  (last_name || ',' || first_name )as fullName, to_char (salary,  '$999,999') salary  from employees
+ where department_id is NULL;
+ COMMIT;
+output:-
+
+FULLNAME                                       SALARY   
+---------------------------------------------- ---------
+Grant,Kimberely                                   $7,000
+
+
+Commit complete.
+
+--Q6
+ SELECT  departments.department_id,  max(to_char (salary  + (NVL( commission_pct ,0 )* salary),  '$999,999') )salary    FROM employees inner join departments on employees.department_id = departments.department_id
+group by departments.department_id;
+COMMIT;
+output:-
+
+DEPARTMENT_ID SALARY   
+------------- ---------
+           50    $8,200
+           40    $6,500
+          110   $12,000
+           90   $24,000
+           30   $11,000
+           70   $10,000
+           10    $4,400
+           20   $13,000
+           60    $9,000
+          100   $12,000
+           80   $19,600
+
+11 rows selected. 
+
+
+Commit complete.
+--Q7
+select employee_id, first_name , last_name,department_id from employees
+where last_name in (
+select last_name from employees
+group by last_name
+having count(last_name)>1)order by last_name;
+COMMIT;
+
+
+output-:
+
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME                 DEPARTMENT_ID
+----------- -------------------- ------------------------- -------------
+        154 Nanette              Cambrault                            80
+        148 Gerald               Cambrault                            80
+        178 Kimberely            Grant                                  
+        199 Douglas              Grant                                50
+        100 Steven               King                                 90
+        156 Janette              King                                 80
+        159 Lindsey              Smith                                80
+        171 William              Smith                                80
+        180 Winston              Taylor                               50
+        176 Jonathon             Taylor                               80
+
+10 rows selected. 
+
+
+Commit complete.
+
+--Q8
+select employee_id, last_name, first_name, department_id ,manager_id;
+select * from employees
+where department_id = 70 or department_id=  60;
+COMMIT;
+
+Error starting at line : 49 in command -
+select employee_id, last_name, first_name, department_id ,manager_id
+Error at Command Line : 49 Column : 68
+Error report -
+SQL Error: ORA-00923: FROM keyword not found where expected
+00923. 00000 -  "FROM keyword not found where expected"
+*Cause:    
+*Action:
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME                 EMAIL                     PHONE_NUMBER         HIRE_DATE JOB_ID         SALARY COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+----------- -------------------- ------------------------- ------------------------- -------------------- --------- ---------- ---------- -------------- ---------- -------------
+        103 Alexander            Hunold                    AHUNOLD                   590.423.4567         03-JAN-90 IT_PROG          9000                       102            60
+        104 Bruce                Ernst                     BERNST                    590.423.4568         21-MAY-91 IT_PROG          6000                       103            60
+        105 David                Austin                    DAUSTIN                   590.423.4569         25-JUN-97 IT_PROG          4800                       103            60
+        106 Valli                Pataballa                 VPATABAL                  590.423.4560         05-FEB-98 IT_PROG          4800                       103            60
+        107 Diana                Lorentz                   DLORENTZ                  590.423.5567         07-FEB-99 IT_PROG          4200                       103            60
+        204 Hermann              Baer                      HBAER                     515.123.8888         07-JUN-94 PR_REP          10000                       101            70
+
+6 rows selected. 
+
+
+Commit complete.
+
+----Q9
+SET SERVEROUTPUT ON
+declare
+l_name varchar2(25):= 'Adams';
+sal     number(8,2):=5678;
+
+begin
+dbms_output.put_line(l_name ||' ' || TO_CHAR(sal,'$999,999.99'));
+
+end;
+/
+
+output-:
+Adams    $5,678.00
+
+
+PL/SQL procedure successfully completed.
+----Q10
+SET SERVEROUTPUT ON
+<<outer_b>>
+declare
+counter integer := 1;
+name1 varchar2(30) := 'Wabash';
+
+begin
+declare
+counter  integer :=99;
+begin
+dbms_output.put_line( outer_b.counter ||' '|| counter|| ' '|| outer_b.name1);
+
+end;
+
+
+end  outer_b;
+/
+ output:-1
+1 99 Wabash
+
+
+PL/SQL procedure successfully completed.
+
