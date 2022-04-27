@@ -1,0 +1,65 @@
+(module
+ (import "" "write_i32"  (func $write_i32  (param i32)))
+ (import "" "write_i32x" (func $write_i32x (param i32)))
+ (import "" "write_i32b" (func $write_i32b (param i32)))
+ (import "" "write_char" (func $write_char (param i32)))
+ (func $triangular (param $n i32)(result i32)
+    (local $start  i32)
+   (local $end    i32)
+   (local $sum    i32)
+   (local $total  i32)
+   i32.const 1
+   local.set $start
+   i32.const 10
+   local.set $end
+   i32.const 0
+   local.set $sum
+   i32.const 0
+   local.set $total
+ block $done
+ loop $rep
+   local.get $start
+   local.get $end
+   i32.ge_s
+  br_if $done
+    local.get $n
+   local.get $sum
+   i32.add
+   local.set $total
+   local.get $total
+   call $write_i32
+   i32.const 10
+   call $write_char
+   local.get $sum
+   local.set $sum
+
+   local.get $start
+   i32.const 1
+   i32.add
+   local.set $start
+  br $rep
+end $rep
+end $done
+
+ )
+ (func $run (export "run") (result i32)
+ (local $counter i32)
+ i32.const 1
+ local.set $counter
+ block $done
+ loop $foo
+ local.get $counter
+ i32.const 10
+ i32.ge_s
+ br_if $done
+   local.get $counter
+   call $triangular
+   local.get $counter
+   i32.const 1
+   i32.add
+   local.set $counter
+   br $foo
+   end $foo
+   end $done
+ )
+)

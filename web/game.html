@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Example</title>
+  </head>
+  <body onload="init()" style="background-color: white; margin: 10px; padding: 0px;">
+    <canvas id="canvas" height="360" width="512" style="margin: 0px; padding: 0px; background-color: white; border: 1px solid; "></canvas>
+    <script src="./game.js"></script>
+    <div>
+      Artwork to load <input id="imagefilename" type="text" value="pacman.png"/> <input id="imagesubmit" type="submit" value="Load artwork"/>
+    </div>
+    <div>
+      WASM code to load <input id="wasmfilename" type="text" value="game01.wasm"/> <input id="wasmsubmit" type="submit" value="Load WASM"/>
+    </div>
+    <div>
+      <div>
+        Progress: <span id="progress"/>
+      </div>      
+      <div>
+        Delta: <span id="delta"/>
+      </div>
+      <div>
+        <input id="stop" type="submit" value="Stop running"/>
+      </div>
+    </div>
+    <p>
+      <div>
+        Artwork
+      </div>
+      <div style="margin-top: 5px;">
+        <img id="artwork"/>
+      </div>
+    </p>
+  </body>
+</html>

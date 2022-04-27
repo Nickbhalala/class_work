@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Example</title>
+    <style>
+      body { background-color: white; margin: 10px; padding: 0px; }
+      canvas { border: 1px solid; }
+    </style>
+  </head>
+  <body onload="init()">
+    <script src="./loader02.js"></script>
+    <div>
+      WASM code to load <input id="wasmfilename" type="text"/> <input id="submit" type="submit"/>
+    </div>
+    <div>
+      <div>
+        Input: <input id="input1" type="text" value="">
+      </div>
+      <div>
+        <input id="compute" type="submit"/>
+      </div>
+      <div>
+        Output: <input id="output1" type="text" value="">
+      </div>
+    </div>
+  </body>
+</html>

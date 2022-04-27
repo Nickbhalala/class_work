@@ -1,0 +1,34 @@
+;; sums numbers in an array of *bytes*
+
+(module
+ (func $console_log (import "imports" "console_log") (param i32))
+ (memory (export "memory") 1)
+ (func $fill-mem (export "fill-mem") (result i32)
+   (local $index i32)
+
+   i32.const 0
+   local.set $index
+
+   block $done
+     loop $repeat
+       local.get $index
+       i32.const 0xff
+       i32.ge_s
+       br_if $done
+
+      
+       local.get $index
+       i32.load8_u
+
+       local.get $index
+       i32.const 1
+       i32.add
+       local.set $index
+       
+       br $repeat
+     end $repeat
+   end $done
+local.get $index
+ 
+ )
+)

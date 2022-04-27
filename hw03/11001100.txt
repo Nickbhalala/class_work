@@ -1,0 +1,4 @@
+--Q3 11001100 in binary to hexadecimal
+        1100  1100
+        c      c     (cc)16
+
